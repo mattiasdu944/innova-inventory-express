@@ -1,7 +1,7 @@
 import { Types, isValidObjectId } from "mongoose";
 import { db } from "../config/index.js";
 import Category from "../models/Category.js";
-import { createCategory, getCategories } from "../services/categoryService.js";
+import { createCategory, getCategories, updateCategory } from "../services/categoryService.js";
 import { createSlug } from "../utils/create-slug.js";
 
 
@@ -69,4 +69,29 @@ export const getCategoryByTerm = async (req, res) => {
 
     return res.json( category );
 
+}
+
+export const updateCategoryById = async (req, res) => {
+    const { term } = req.params;
+    const { name, description, image } = req.body;
+
+    if( !isValidObjectId(term)){
+        return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
+    }
+
+    await db.connect();
+    const category = await Category.findById(term);
+    
+    if( !category ){
+        await db.disconnect();
+        return handleErrorMessage('Servicio no encontrado', res)
+    }
+    console.log(category)
+    const categoryUpdate = await updateCategory(category, { name, description, image})
+
+    return res.json({
+        message: 'Categoria actualizada correctamente',
+        data: categoryUpdate
+    })
+    
 }
