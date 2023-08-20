@@ -12,5 +12,4 @@ router.route('/categories')
 //     .put(updateServiceById)
 //     .delete(deleteOneService);
 
-
 export default router;
