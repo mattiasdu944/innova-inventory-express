@@ -8,6 +8,8 @@ const productSchema = Schema({
     price:          { type: String, trim: true, default: 0 },
     stock:          { type: Number, default: 0, required: true},
     category:       { type: Schema.Types.ObjectId, ref: 'Category' },
+}, {
+    timestamps: true
 })
 
 const Product = model('Product', productSchema);

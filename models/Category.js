@@ -5,6 +5,8 @@ const categorySchema = Schema({
     slug:           { type: String, trim: true, lowercase: true },
     description:    { type: String, required: true, trim: true },
     image:          { type: String, trim: true, default: '' }
+}, {
+    timestamps: true
 })
 
 const Category = model('Category', categorySchema);
