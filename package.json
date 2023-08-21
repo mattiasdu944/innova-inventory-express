@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "db:seed": "node data/seed.js --seed",
+    "db:destroy": "node data/seed.js --clear"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
