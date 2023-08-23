@@ -21,3 +21,11 @@ export const createProduct = async (product) => {
     await db.disconnect();
     return newProduct;
 }
+
+export const getProduct = async (slug) => {
+    await db.connect();
+    const product = await Product.findOne({ slug }).select('-__v')
+    await db.disconnect();
+
+    return product;
+}

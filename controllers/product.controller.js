@@ -1,7 +1,7 @@
-import { isValidObjectId } from "mongoose";
-import { createProduct, getProducts } from "../services/productServices.js";
-import Product from "../models/Product.js";
 import { db } from "../config/index.js";
+import Product from "../models/Product.js";
+import { createProduct, getProduct, getProducts } from "../services/productServices.js";
+
 import { createSlug } from "../utils/create-slug.js";
 import { validateNewProduct } from "../utils/validate-new-product.js";
 
@@ -35,6 +35,16 @@ export const createNewProduct = async ( req, res ) => {
         message: "Producto creado correctamente",
         product
     })
-    
+}
 
+export const getProductBySlug = async (req, res) => {
+    const { slug } = req.params;
+
+    const product = await getProduct( slug );
+
+    if( !product ){
+        return res.status(404).json( { message: 'Producto no encontrada o no existe' } );
+    }
+
+    return res.json( product );
 }
