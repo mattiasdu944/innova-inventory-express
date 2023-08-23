@@ -1,6 +1,6 @@
 import { db } from "../config/index.js";
 import Product from "../models/Product.js";
-import { createProduct, getProduct, getProducts } from "../services/productServices.js";
+import { createProduct, getProduct, getProducts, deleteOneProduct } from "../services/productServices.js";
 
 import { createSlug } from "../utils/create-slug.js";
 import { validateNewProduct } from "../utils/validate-new-product.js";
@@ -13,8 +13,7 @@ export const getAllProducts = async ( req, res ) => {
 export const createNewProduct = async ( req, res ) => {
     const newProduct = req.body;
     const validate = validateNewProduct(newProduct, res);
-
-    if ( validate.statusCode !== 200 ) {
+    if ( !validate ) {
         return validate;
     }
 
@@ -48,3 +47,23 @@ export const getProductBySlug = async (req, res) => {
 
     return res.json( product );
 }
+
+export const deleteProduct = async (req, res) => {
+    const { slug } = req.params;
+
+    await db.connect();
+    
+    const product = await getProduct( slug );
+
+    if( !product ){
+        await db.disconnect();
+        return res.status(404).json({ message: 'Producto no encontrado o no existe' } );
+    }
+
+    await deleteOneProduct(slug);
+    await db.disconnect();
+
+    return res.json({
+        message: 'Producto eliminado correctamente',
+    })
+}   

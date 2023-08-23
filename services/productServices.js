@@ -24,8 +24,19 @@ export const createProduct = async (product) => {
 
 export const getProduct = async (slug) => {
     await db.connect();
-    const product = await Product.findOne({ slug }).select('-__v')
+    const product = await Product.find({ slug }).select('-__v')
     await db.disconnect();
 
-    return product;
+    return product[0];
+}
+
+export const deleteOneProduct = async (slug) => {
+    try {
+        await db.connect();
+        await Product.deleteOne({ slug } )
+        await db.disconnect();
+        
+    } catch (error) {
+        console.log(error);
+    } 
 }
