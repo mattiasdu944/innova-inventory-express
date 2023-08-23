@@ -12,3 +12,12 @@ export const getProducts = async () => {
 
     return products;
 }
+
+export const createProduct = async (product) => {
+    console.log(product);
+    const newProduct = new Product(product);
+    await db.connect();
+    await newProduct.save();
+    await db.disconnect();
+    return newProduct;
+}
