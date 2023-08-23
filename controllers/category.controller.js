@@ -1,7 +1,7 @@
 import { Types, isValidObjectId } from "mongoose";
 import { db } from "../config/index.js";
 import Category from "../models/Category.js";
-import { createCategory, getCategories, updateCategory } from "../services/categoryService.js";
+import { createCategory, deleteCategory, getCategories, updateCategory } from "../services/categoryService.js";
 import { createSlug } from "../utils/create-slug.js";
 
 
@@ -84,14 +84,42 @@ export const updateCategoryById = async (req, res) => {
     
     if( !category ){
         await db.disconnect();
-        return handleErrorMessage('Servicio no encontrado', res)
+        return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
-    console.log(category)
+
     const categoryUpdate = await updateCategory(category, { name, description, image})
+    await db.disconnect();
 
     return res.json({
         message: 'Categoria actualizada correctamente',
         data: categoryUpdate
+    })
+    
+}
+
+export const deleteOneCategory = async (req, res) => { 
+    const { term : id } = req.params;
+
+    console.log(id);
+    
+    if( !isValidObjectId(id)){
+        return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
+    }
+
+    await db.connect();
+    
+    const category = await Category.findById(id);
+
+    if( !category ){
+        await db.disconnect();
+        return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
+    }
+
+    await deleteCategory(category)
+    await db.disconnect();
+
+    return res.json({
+        message: 'Categoria eliminada correctamente',
     })
     
 }

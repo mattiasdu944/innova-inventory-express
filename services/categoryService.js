@@ -32,3 +32,14 @@ export const updateCategory = async (category, categoryUpdate) => {
     await db.disconnect();
     return category;
 }
+
+export const deleteCategory = async (category) => {
+    try {
+        await db.connect();
+        await category.deleteOne();
+        await db.disconnect();
+        
+    } catch (error) {
+        console.log(error);
+    } 
+};
