@@ -1,5 +1,6 @@
 import { db } from "../config/index.js"
 import Product from "../models/Product.js"
+import { createSlug } from "../utils/create-slug.js";
 
 export const getProducts = async () => {
     await db.connect()
@@ -39,4 +40,20 @@ export const deleteOneProduct = async (slug) => {
     } catch (error) {
         console.log(error);
     } 
+}
+
+export const updateProduct = async ( product, productUpdate ) => {
+    await db.connect();
+    
+    product.name = productUpdate.name || product.name;
+    product.price = productUpdate.price || product.price;
+    product.stock = productUpdate.stock || product.stock;
+    product.category = productUpdate.category || product.category;
+    product.images = productUpdate.images || product.images;
+    product.description = productUpdate.description || product.description;
+    product.slug = productUpdate.name ?  createSlug(productUpdate.name) : product.slug;
+
+    await product.save();
+    await db.disconnect();
+    return product;
 }

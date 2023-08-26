@@ -1,6 +1,6 @@
 import { db } from "../config/index.js";
 import Product from "../models/Product.js";
-import { createProduct, getProduct, getProducts, deleteOneProduct } from "../services/productServices.js";
+import { createProduct, getProduct, getProducts, deleteOneProduct, updateProduct } from "../services/productServices.js";
 
 import { createSlug } from "../utils/create-slug.js";
 import { validateNewProduct } from "../utils/validate-new-product.js";
@@ -67,3 +67,19 @@ export const deleteProduct = async (req, res) => {
         message: 'Producto eliminado correctamente',
     })
 }   
+
+export const updateOneProduct = async (req, res) => {
+    const { slug } = req.params;
+    const existProduct = await getProduct( slug );
+    
+    if( !existProduct ){
+        return res.status(404).json({ message: 'Producto no encontrado o no existe' } );
+    }
+
+    const product = await updateProduct(existProduct, req.body);
+    return res.json({
+        message: 'Producto actualizado correctamente',
+        product
+    })
+
+}
