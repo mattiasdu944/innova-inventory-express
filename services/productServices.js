@@ -25,7 +25,7 @@ export const createProduct = async (product) => {
 
 export const getProduct = async (slug) => {
     await db.connect();
-    const product = await Product.find({ slug }).select('-__v')
+    const product = await Product.find({ slug }).select('-__v').populate('category', '-__v');
     await db.disconnect();
 
     return product[0];

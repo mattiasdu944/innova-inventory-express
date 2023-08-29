@@ -43,7 +43,7 @@ export const login = async ( req, res ) => {
     const { email, password } = req.body;
 
     await db.connect();
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     await db.disconnect();
 
     if( !user ){
@@ -61,13 +61,25 @@ export const login = async ( req, res ) => {
     user.token = token;
     await user.save();
     await db.disconnect();
-
-    return res.json( user )
+    const { name, image  } = user;
+    return res.json({
+        name,
+        email,
+        image,
+        token,
+    })
 
 }
 
 
 export const user = async ( req, res ) => {
-    return res.json( req.user )
+    const { name, email, image, token } = req.user;
+    console.log(req.user);
+    return res.json({
+        name,
+        email,
+        image,
+        token,
+    })
     
 }

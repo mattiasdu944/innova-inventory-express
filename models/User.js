@@ -7,6 +7,8 @@ const userSchema = Schema({
     email:      { type: String, required: true, trim: true, unique: true, lowercase: true},
     token:      { type: String },
     image:      { type: String, trim: true, default:"https://www.innovacode.online/wp-content/uploads/2023/06/cropped-Logo-Innova-Code.png" }
+}, {
+    timestamps: true
 })
 
 // MIDLEWARE ANTES DEL REGISTRO

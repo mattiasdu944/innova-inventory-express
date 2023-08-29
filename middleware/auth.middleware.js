@@ -4,9 +4,13 @@ import User from '../models/User.js';
 
 export const authMiddleware = async ( req, res, next ) => {
     
-    let token = req.headers.authorization;
+    let token = req.headers.authorization.replaceAll('"', '');
 
-    if( !token && !token.startsWith( 'Bearer ' ) ){
+    if( !token ){
+        return res.status(403).json({ message:'Token no valido' })
+    }
+
+    if( !token.startsWith( 'Bearer ' ) ){
         return res.status(403).json({ message:'Token no valido' })
     }
 
@@ -15,9 +19,10 @@ export const authMiddleware = async ( req, res, next ) => {
         const decoded = jwt.verify( token, process.env.JWT_SECRET );
         
         await db.connect();
-        req.user = await User.findById( decoded.id ).select('-password -__v -_id');
+        const user = await User.findById( decoded.id ).select('-password -__v -_id -updatedAt');
         await db.disconnect();
 
+        req.user = user;
         next();
 
         

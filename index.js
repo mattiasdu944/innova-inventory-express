@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import categoriesRoutes from './router/category.routes.js'
 import productsRouter from './router/products.routes.js'
 import uploadRoutes from './router/upload.routes.js'
+import salesRoutes from './router/sales.routes.js'
 import authRoutes from './router/auth.routes.js'
 
 
@@ -12,8 +13,9 @@ const app = express();
 
 app.use(express.json()) // permite recibir req.body en json
 app.use('/api', categoriesRoutes) // carga de rutas
-app.use('/api', uploadRoutes) // carga de rutas
 app.use('/api', productsRouter) // carga de rutas
+app.use('/api', uploadRoutes) // carga de rutas
+app.use('/api', salesRoutes) // carga de rutas
 app.use('/api', authRoutes) // carga de rutas
 
 app.use(express.static('./public'))
