@@ -5,6 +5,7 @@ import productsRouter from './router/products.routes.js'
 import uploadRoutes from './router/upload.routes.js'
 import salesRoutes from './router/sales.routes.js'
 import authRoutes from './router/auth.routes.js'
+import { db } from "./config/index.js";
 
 
 dotenv.config();
@@ -22,6 +23,8 @@ app.use(express.static('./public'))
 
 
 const PORT = process.env.PORT || 4000; // puerto donde se ejecuta
+
+await db.connect();
 
 app.listen(PORT, () => {
     console.log('Server on port:', PORT)

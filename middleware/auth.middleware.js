@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { db } from "../config/index.js";
 import User from '../models/User.js';
 
 export const authMiddleware = async ( req, res, next ) => {
@@ -17,11 +16,10 @@ export const authMiddleware = async ( req, res, next ) => {
     try {
         token = token.split( ' ' )[1];  
         const decoded = jwt.verify( token, process.env.JWT_SECRET );
-        
-        await db.connect();
-        const user = await User.findById( decoded.id ).select('-password -__v -_id -updatedAt');
-        await db.disconnect();
-
+     
+        const user = await User.find({ _id: decoded.id }).select('-password -__v -_id -updatedAt');
+       
+        console.log('user');
         req.user = user;
         next();
 

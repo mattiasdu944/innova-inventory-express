@@ -5,8 +5,8 @@ const productSchema = Schema({
     slug:           { type: String, trim: true, lowercase: true },
     description:    { type: String, required: true, trim: true },
     images:         [{ type: String, trim: true, default: '' }],
-    price:          { type: String, trim: true, default: 0 },
-    stock:          { type: Number, default: 0, required: true},
+    price:          { type: String, trim: true, default: 0, min: 0 },
+    stock:          { type: Number, default: 0, required: true, min: 0},
     category:       { type: Schema.Types.ObjectId, ref: 'Category' },
 }, {
     timestamps: true

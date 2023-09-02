@@ -19,9 +19,7 @@ export const createNewProduct = async ( req, res ) => {
 
     const slug = createSlug(newProduct.name);
 
-    await db.connect()
     const productExist = await Product.findOne({ slug });
-    await db.disconnect()
     
     if( productExist ){
         return res.status(403).json({ message: 'El producto ya se encuentra registrado' })
@@ -51,17 +49,17 @@ export const getProductBySlug = async (req, res) => {
 export const deleteProduct = async (req, res) => {
     const { slug } = req.params;
 
-    await db.connect();
+    //
     
     const product = await getProduct( slug );
 
     if( !product ){
-        await db.disconnect();
+        //
         return res.status(404).json({ message: 'Producto no encontrado o no existe' } );
     }
 
     await deleteOneProduct(slug);
-    await db.disconnect();
+    //
 
     return res.json({
         message: 'Producto eliminado correctamente',

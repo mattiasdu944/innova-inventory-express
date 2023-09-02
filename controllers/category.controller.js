@@ -32,9 +32,9 @@ export const createNewCategory = async (req, res) => {
     }
 
     try {
-        await db.connect();
+        //
         const existCategory = await Category.findOne({ name });
-        await db.disconnect();
+        //
         if( existCategory ){
             return res.status(403).json({ message: 'Ya existe una categoria con este nombre' });
         }
@@ -55,13 +55,13 @@ export const createNewCategory = async (req, res) => {
 
 export const getCategoryByTerm = async (req, res) => {
     const { term } = req.params;
-    await db.connect();
+    //
 
     const category = await Category.findOne({ $or: [
         { _id: isValidObjectId(term) ? term : undefined },
         { slug: term }
     ]}).select('-__v')
-    await db.disconnect();
+    //
 
     if( !category ){
         return res.status(404).json( { message: 'Categoria no encontrada o no existe' } );
@@ -79,16 +79,16 @@ export const updateCategoryById = async (req, res) => {
         return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
 
-    await db.connect();
+    //
     const category = await Category.findById(term);
     
     if( !category ){
-        await db.disconnect();
+        //
         return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
 
     const categoryUpdate = await updateCategory(category, { name, description, image})
-    await db.disconnect();
+    //
 
     return res.json({
         message: 'Categoria actualizada correctamente',
@@ -106,17 +106,17 @@ export const deleteOneCategory = async (req, res) => {
         return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
 
-    await db.connect();
+    //
     
     const category = await Category.findById(id);
 
     if( !category ){
-        await db.disconnect();
+        //
         return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
 
     await deleteCategory(category)
-    await db.disconnect();
+    //
 
     return res.json({
         message: 'Categoria eliminada correctamente',

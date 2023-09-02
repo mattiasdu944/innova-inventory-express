@@ -7,12 +7,15 @@ import Category from "../models/Category.js";
 import { clients } from "./clients.js";
 import { categories } from "./categories.js";
 import { seedingProducts } from "./products.js";
+import Sale from "../models/Sale.js";
 
 dotenv.config();
 
 const command = process.argv[2];
 
 async function seed(){
+    //
+
     await db.connect();
 
     await Category.deleteMany();
@@ -25,8 +28,8 @@ async function seed(){
 
     const productsSeeding = seedingProducts(categoriesSeed);
     await Product.insertMany(productsSeeding);
-    
     await db.disconnect();
+    //
 }
 
 
@@ -35,7 +38,9 @@ async function clear(){
     await Category.deleteMany();
     await Product.deleteMany();
     await Client.deleteMany();
+    await Sale.deleteMany();
     await db.disconnect();
+    //
 }
 switch (command) {
     case '--seed':
