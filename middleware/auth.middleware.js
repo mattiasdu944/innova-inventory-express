@@ -2,7 +2,11 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 export const authMiddleware = async ( req, res, next ) => {
-    
+
+    if( !req.headers.authorization ){
+        return res.status(403).json({ message:'No esta autenticado' })
+    }
+
     let token = req.headers.authorization.replaceAll('"', '');
 
     if( !token ){
@@ -19,7 +23,6 @@ export const authMiddleware = async ( req, res, next ) => {
      
         const user = await User.find({ _id: decoded.id }).select('-password -__v -_id -updatedAt');
        
-        console.log('user');
         req.user = user;
         next();
 

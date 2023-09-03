@@ -1,3 +1,4 @@
+import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import orderService from "../services/orderService.js";
 
@@ -7,29 +8,39 @@ export const getAllOrders = async (req, res) => {
 };
 
 export const createOrder = async (req, res) => {
-    if( Object.values(req.body).includes('') ){
-        return res.status(400).json({ message: 'Todos los campos son obligatorios'});
+
+    const { orderItems } = req.body;
+    
+    const productsIds = orderItems.map( product => product._id );
+
+    const dbProducts = await Product.find({ _id: { $in: productsIds  } })
+
+    try {
+        let subTotal = 0;
+
+        orderItems.map(( item )  => {
+            subTotal += item.quantity * item.price;
+            return subTotal
+        })
+
+        if( subTotal !== req.body.total ){
+            throw new Error('Manipulacion de datos')
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            message: error.message || 'Revise logs del servidor'
+        })
     }
 
-    const { details } = req.body;
 
-    // details.map( async detail => {
-    //     try {
-    //         const product = await Product.findById( detail.product );
-    //         if( product.stock < detail.amount ) {
-    //             return;
-    //         }
-    //         product.stock = product.stock - detail.amount;
-    //         product.save();
-    //     } catch (error) {
-    //         return error;
-    //     }
-    // })
-    
-    // const sale = await saleService.create(req.body);
+    const newOrder = new Order( req.body );
+    newOrder.total = Math.round( newOrder.total * 100) / 100;
+    await newOrder.save();
 
-    // return res.json({ 
-    //     message: 'Venta exitosa',
-    //     sale
-    // })
+    return res.status(201).json({
+        message: 'Orden creada',
+        order: newOrder
+    })
 };
