@@ -4,7 +4,7 @@ import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.route('/sales')
+router.route('/orders')
     .get(getAllOrders)
     .post(authMiddleware, createOrder);
 

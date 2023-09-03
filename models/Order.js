@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
 import Client from "./Client.js";
 import Product from "./Product.js";
-import Category from "./Category.js";
 
 const orderSchema = Schema({
     total :     { type: Number, required: true },

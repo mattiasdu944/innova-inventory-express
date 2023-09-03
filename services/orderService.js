@@ -2,14 +2,8 @@ import Order from "../models/Order.js";
 
 const findAll = async () => {
     const orders = await Order.find()
-        // .select('-__v')
-        // .populate({
-        //     path: 'details',
-        //     populate: {
-        //         path: 'product',
-        //         select: '-__v'
-        //     }
-        // });
+        .select('-__v')
+        .populate('client', '-__v -_id');
 
     return orders;
 };

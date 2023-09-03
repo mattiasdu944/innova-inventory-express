@@ -10,10 +10,6 @@ export const getAllOrders = async (req, res) => {
 export const createOrder = async (req, res) => {
 
     const { orderItems } = req.body;
-    
-    const productsIds = orderItems.map( product => product._id );
-
-    const dbProducts = await Product.find({ _id: { $in: productsIds  } })
 
     try {
         let subTotal = 0;
@@ -29,6 +25,25 @@ export const createOrder = async (req, res) => {
         
     } catch (error) {
         console.log(error);
+        return res.status(400).json({
+            message: error.message || 'Revise logs del servidor'
+        })
+    }
+
+    const productsIds = orderItems.map( product => product._id );
+
+    const dbProducts = await Product.find({ _id: { $in: productsIds  } })
+
+    try {
+        orderItems.map((order, index) => {
+            if( order.quantity > order.stock || order.stock === 0){
+                throw new Error('Stock insuficiente')
+            }
+
+            dbProducts[index].stock = dbProducts[index].stock - order.quantity;
+            dbProducts[index].save();
+        })
+    } catch (error) {
         return res.status(400).json({
             message: error.message || 'Revise logs del servidor'
         })
