@@ -1,13 +1,12 @@
-import { Types, isValidObjectId } from "mongoose";
-import { db } from "../config/index.js";
+import { isValidObjectId } from "mongoose";
 import Category from "../models/Category.js";
-import { createCategory, deleteCategory, getCategories, updateCategory } from "../services/categoryService.js";
 import { createSlug } from "../utils/create-slug.js";
+import categoryService from "../services/categoryService.js";
 
 
 
 export const getAllCategories = async (req, res) => {
-    const categories = await getCategories();
+    const categories = await categoryService.findAll();
     return res.json( categories )
 }   
 
@@ -32,17 +31,16 @@ export const createNewCategory = async (req, res) => {
     }
 
     try {
-        //
         const existCategory = await Category.findOne({ name });
-        //
+
         if( existCategory ){
             return res.status(403).json({ message: 'Ya existe una categoria con este nombre' });
         }
         
+        
         const slug = createSlug(name);
+        const category = await categoryService.create({...req.body, slug });
 
-        const category = await createCategory({...req.body, slug });
-        console.log(category);
         return res.json({
             message: 'Categoria creada con exito',
             category,
@@ -55,13 +53,10 @@ export const createNewCategory = async (req, res) => {
 
 export const getCategoryByTerm = async (req, res) => {
     const { term } = req.params;
-    //
-
     const category = await Category.findOne({ $or: [
         { _id: isValidObjectId(term) ? term : undefined },
         { slug: term }
-    ]}).select('-__v')
-    //
+    ]}).select('-__v');
 
     if( !category ){
         return res.status(404).json( { message: 'Categoria no encontrada o no existe' } );
@@ -79,16 +74,13 @@ export const updateCategoryById = async (req, res) => {
         return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
 
-    //
     const category = await Category.findById(term);
     
     if( !category ){
-        //
         return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
 
-    const categoryUpdate = await updateCategory(category, { name, description, image})
-    //
+    const categoryUpdate = await categoryService.update(category, { name, description, image})
 
     return res.json({
         message: 'Categoria actualizada correctamente',
@@ -99,24 +91,18 @@ export const updateCategoryById = async (req, res) => {
 
 export const deleteOneCategory = async (req, res) => { 
     const { term : id } = req.params;
-
-    console.log(id);
     
     if( !isValidObjectId(id)){
         return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
 
-    //
-    
     const category = await Category.findById(id);
 
     if( !category ){
-        //
         return res.status(404).json({ message: 'Categoria no encontrada o no existe' } );
     }
 
-    await deleteCategory(category)
-    //
+    await categoryService.remove(category)
 
     return res.json({
         message: 'Categoria eliminada correctamente',
