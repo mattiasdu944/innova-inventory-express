@@ -1,13 +1,13 @@
 import express from "express";
-import { createNewSale, getAllSales } from "../controllers/sale.controller.js";
+import { createOrder, getAllOrders } from "../controllers/order.controller.js";
 
 const router = express.Router();
 
 router.route('/sales')
-    .get(getAllSales)
-    .post(createNewSale);
+    .get(getAllOrders)
+    .post(createOrder);
 
-router.route('/sales/:id')
+// router.route('/sales/:id')
     // .get(getProductBySlug)
     // .put(updateOneProduct)
     // .delete(deleteProduct);
