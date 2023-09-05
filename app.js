@@ -5,6 +5,7 @@ import productsRouter from './router/products.routes.js'
 import uploadRoutes from './router/upload.routes.js'
 import ordersRoutes from './router/orders.routes.js'
 import authRoutes from './router/auth.routes.js'
+import seedRoutes from "./router/seed.routes.js";
 import { db } from "./config/index.js";
 
 
@@ -18,6 +19,7 @@ app.use('/api', productsRouter) // carga de rutas
 app.use('/api', uploadRoutes) // carga de rutas
 app.use('/api', ordersRoutes) // carga de rutas
 app.use('/api', authRoutes) // carga de rutas
+app.use('/api', seedRoutes) // carga de rutas
 
 app.use(express.static('./public'))
 
