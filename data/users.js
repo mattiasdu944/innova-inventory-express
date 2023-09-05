@@ -4,13 +4,13 @@ const salt = await bcrypt.genSalt(10);
 
 export const users = [
     {
-        name: 'Alex Perez',
+        name: 'Usuario 1',
         password: await bcrypt.hash('123456',salt),
         email: 'admin@correo.com',
     },
     {
-        name: 'Juan Perez',
+        name: 'Usuario 2',
         password: await bcrypt.hash('123456',salt),
-        email: 'juan@correo.com',
+        email: 'user@correo.com',
     },
 ];
