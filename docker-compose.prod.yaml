@@ -1,0 +1,27 @@
+version: '3'
+services:
+  app:
+    depends_on:
+      - db
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: express-app
+    image: inventory-backend
+    restart: always
+    ports:
+      - "${PORT}:${PORT}"
+
+    environment:
+      PORT: ${PORT}
+      MONGO_URL: ${MONGO_URL}
+      JWT_SECRET: ${JWT_SECRET} 
+
+  db:
+    image: mongo:5.0.0
+    container_name: database
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/data/db

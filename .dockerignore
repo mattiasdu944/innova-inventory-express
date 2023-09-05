@@ -1,2 +1,8 @@
 node_modules/
 mongo/
+.git/
+
+.env
+.env.dev
+.env.prod
+.gitignore
