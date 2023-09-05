@@ -73,8 +73,7 @@ export const login = async ( req, res ) => {
 
 
 export const user = async ( req, res ) => {
-    const { name, email, image, token } = req.user;
-    console.log(req.user);
+    const { name, email, image, token } = req.user[0];
     return res.json({
         name,
         email,
